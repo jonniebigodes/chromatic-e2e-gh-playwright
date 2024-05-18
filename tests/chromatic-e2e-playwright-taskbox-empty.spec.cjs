@@ -1,5 +1,5 @@
 // @ts-check
-const { test, expect } = require("@playwright/test");
+const { expect, takeSnapshot, test } = require("@chromatic-com/playwright");
 
 test.beforeEach(async ({ context }) => {
   await context.route("/authenticate", (route) => {
@@ -23,39 +23,30 @@ test.beforeEach(async ({ context }) => {
     });
   });
 });
-test("Playwright - GH - Workflow - Login OK with empty tasks", async ({
+
+test("Chromatic E2E Playwright - Login OK with empty tasks", async ({
   page,
-}) => {
+}, testInfo) => {
+  // console.log("beforeEach test output dir", testInfo.outputDir);
   const email = "alice.carr@test.com";
   const password = "k12h1k0$5;lpa@Afn";
   await page.goto("/");
-  await page.screenshot({
-    path: "./test-results/Empty Tasks Initial Stage.png",
-    fullPage: true,
-  });
+
+  // Take a snapshot of the initial page
+  await takeSnapshot(page, "Empty Tasks - Initial Stage", testInfo);
   // Fills the form inputs
   await page.locator('input[name="email"]').fill(email);
   await page.locator('input[name="password"]').fill(password);
 
-  // capture screenshot
-  await page.screenshot({
-    path: "./test-results/Empty Tasks Filled Form.png",
-    fullPage: true,
-  });
+  // Take a snapshot of the filled form
+  await takeSnapshot(page, "Empty Tasks - Filled Form", testInfo);
 
   // Clicks the submit button
   await page.getByRole("button", { name: "Sign in" }).click();
-  // capture screenshot
-  await page.screenshot({
-    path: "./test-results/Empty Tasks No Tasks Message.png",
-    fullPage: true,
-  });
 
   // Waits for the tasks to load and checks that the list is empty
   await expect(page.getByText("You have no tasks")).toBeVisible();
-  // capture screenshot
-  await page.screenshot({
-    path: "./test-results/Empty Tasks No Tasks Message.png",
-    fullPage: true,
-  });
+
+  // Take a snapshot of the empty tasks
+  await takeSnapshot(page, "Empty Tasks - No Tasks Screen", testInfo);
 });

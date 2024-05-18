@@ -1,5 +1,5 @@
 // @ts-check
-const { test, expect } = require("@playwright/test");
+const { expect, takeSnapshot, test } = require("@chromatic-com/playwright");
 
 test.beforeEach(async ({ context }) => {
   await context.route("/authenticate", (route) => {
@@ -42,71 +42,57 @@ test.beforeEach(async ({ context }) => {
     });
   });
 });
-test("Playwright - GH - Workflow - Login OK with filled tasks", async ({
+
+test("Chromatic E2E Playwright - Successful Login with tasks", async ({
   page,
-}) => {
+}, testInfo) => {
   const email = "alice.carr@test.com";
   const password = "k12h1k0$5;lpa@Afn";
   await page.goto("/");
 
   // Take a snapshot of the initial page
-  await page.screenshot({
-    path: "./test-results/Filled Tasks Initial Stage.png",
-    fullPage: true,
-  });
+  await takeSnapshot(page, "Filled Tasks - Initial Stage", testInfo);
 
   // Fills the form inputs
   await page.locator('input[name="email"]').fill(email);
   await page.locator('input[name="password"]').fill(password);
 
-  // Take a snapshot of the filled form
-  await page.screenshot({
-    path: "./test-results/Filled Tasks Filled Form.png",
-    fullPage: true,
-  });
+  // Take a snapshot of the form filled
+  await takeSnapshot(page, "Filled Tasks - Filled Form", testInfo);
 
   // Clicks the submit button
   await page.getByRole("button", { name: "Sign in" }).click();
 
   await expect(page.locator('[aria-label="tasks"] div')).toHaveCount(6);
-  // Take a snapshot of the tasks loaded
-  await page.screenshot({
-    path: "./test-results/Filled Tasks Tasks Loaded.png",
-    fullPage: true,
-  });
+
+  // Take a snapshot of the form filled
+  await takeSnapshot(page, "Filled Tasks - Tasks Loaded", testInfo);
 });
 
-/* test("Playwright - CircleCI - Workflow - Login OK with delete task", async ({
+/* test("Chromatic E2E Playwright - Successful Login with delete task", async ({
   page,
-}) => {
+}, testInfo) => {
   const email = "alice.carr@test.com";
   const password = "k12h1k0$5;lpa@Afn";
   await page.goto("/");
 
   // Take a snapshot of the initial page
-  await page.screenshot({
-    path: "./test-results/Delete Task Filled Tasks Initial Stage.png",
-    fullPage: true,
-  });
+  await takeSnapshot(page, "Filled Tasks - Initial Stage", testInfo);
 
   // Fills the form inputs
   await page.locator('input[name="email"]').fill(email);
   await page.locator('input[name="password"]').fill(password);
 
-  // Take a snapshot of the filled form
-  await page.screenshot({
-    path: "./test-results/Delete Task Filled Tasks Filled Form.png",
-    fullPage: true,
-  });
+  // Take a snapshot of the form filled
+  await takeSnapshot(page, "Filled Tasks - Filled Form", testInfo);
 
   // Clicks the submit button
   await page.getByRole("button", { name: "Sign in" }).click();
 
   await page.getByRole("button", { name: "delete-1" }).click();
-
   await expect(page.locator('[aria-label="tasks"] div')).toHaveCount(5);
-  await page.screenshot({
-    path: "./test-results/Delete Task Filled Tasks Tasks Deleted.png",
-    fullPage: true,
-  });
-}); */
+
+  // Take a snapshot of the form filled
+  await takeSnapshot(page, "Filled Tasks - Tasks Loaded and deleted", testInfo);
+});
+ */
