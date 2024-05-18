@@ -1,0 +1,41 @@
+name: "UI Tests"
+
+on: push
+
+# Check the Chromatic Docs for inconsistencies (in the Sharding docs the action uses bahmutov/npm-install@v1 and in the CI docs npm ci)
+jobs:
+  Chromatic:
+    name: "Run Chromatic VRT Tests"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install dependencies
+        run: npm ci
+      - name: "Run Chromatic"
+        uses: chromaui/action@latest
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+
+  Playwright:
+    name: "Run Playwright"
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.44.0-jammy
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install dependencies
+        run: npm ci
+      - name: "Run Playwright tests"
+        run: npx playwright test
+        env:
+          HOME: /root
