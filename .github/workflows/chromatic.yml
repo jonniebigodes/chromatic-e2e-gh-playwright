@@ -20,15 +20,15 @@ jobs:
         uses: chromaui/action@latest
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-   ####################################### Playwright wthout sharding #######################################
+  ####################################### Playwright wthout sharding #######################################
   Playwright:
     name: "Run Playwright"
-     runs-on: ubuntu-latest
-     container:
-       image: mcr.microsoft.com/playwright:v1.44.0-jammy
-     steps:
-       - uses: actions/checkout@v4
-         with:
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.44.0-jammy
+    steps:
+      - uses: actions/checkout@v4
+        with:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
@@ -74,8 +74,8 @@ jobs:
   #         name: playwright-report-${{ matrix.shard }}_${{ strategy.job-total }}
   #         path: test-results/
   #         retention-days: 30
-###################################################################################################################
-######################### Chromatic E2E ###########################################################################
+  ###################################################################################################################
+  ######################### Chromatic E2E ###########################################################################
   Chromatic_E2E:
     name: "Run Chromatic E2E Tests"
     needs: Playwright
