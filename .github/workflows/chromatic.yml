@@ -21,8 +21,37 @@ jobs:
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
   ####################################### Playwright wthout sharding #######################################
+  #  Playwright:
+  #   name: "Run Playwright"
+  #    runs-on: ubuntu-latest
+  #    container:
+  #      image: mcr.microsoft.com/playwright:v1.44.0-jammy
+  #    steps:
+  #      - uses: actions/checkout@v4
+  #        with:
+  #         fetch-depth: 0
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 20
+  #     - name: Install dependencies
+  #       run: npm ci
+  #     - name: "Run Playwright tests"
+  #       run: npx playwright test
+  #       env:
+  #         HOME: /root
+  #     - uses: actions/upload-artifact@v4
+  #       if: always()
+  #       with:
+  #         name: test-results
+  #         path: test-results/
+  #         retention-days: 30
+  ##########################################################################################################
+  ####################################### Playwright with sharding #######################################
   Playwright:
     name: "Run Playwright"
+    strategy:
+      matrix:
+        shard: [1, 2]
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.44.0-jammy
@@ -36,14 +65,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: "Run Playwright tests"
-        run: npx playwright test
+        run: npx playwright test --shard=${{ matrix.shard }}/${{ strategy.job-total }}
         env:
           HOME: /root
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: test-results
+          name: playwright-report-${{ matrix.shard }}_${{ strategy.job-total }}
           path: test-results/
           retention-days: 30
-##########################################################################################################
-####################################### Playwright with sharding #######################################
+###################################################################################################################
+######################### Chromatic E2E ###########################################################################
