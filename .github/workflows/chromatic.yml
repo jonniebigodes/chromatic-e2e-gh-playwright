@@ -20,8 +20,8 @@ jobs:
         uses: chromaui/action@latest
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-  ####################################### Playwright wthout sharding #######################################
-   Playwright:
+   ####################################### Playwright wthout sharding #######################################
+  Playwright:
     name: "Run Playwright"
      runs-on: ubuntu-latest
      container:
