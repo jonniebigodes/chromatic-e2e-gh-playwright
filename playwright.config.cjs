@@ -32,7 +32,7 @@ module.exports = defineConfig({
   },
   // Comment below after testing custom directory
   // manually injected to the test results
-  //outputDir: "./manual-test-results",
+  outputDir: "./custom-test-results",
   //
   /* Configure projects for major browsers */
   projects: [

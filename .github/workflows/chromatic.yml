@@ -43,7 +43,8 @@ jobs:
         if: always()
         with:
           name: test-results
-          path: test-results/
+          #path: test-results/
+          path: ./custom-test-results
           retention-days: 30
   ##########################################################################################################
   ####################################### Playwright with sharding #######################################
@@ -93,7 +94,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: test-results
-          path: ./test-results
+          path: ./custom-test-results
           # pattern: playwright-report-*
           # merge-multiple: true
       - name: "Run Chromatic E2E"
@@ -101,3 +102,5 @@ jobs:
         with:
           projectToken: ${{ secrets.CHROMATIC_E2E_PROJECT_TOKEN }}
           playwright: true
+        env:
+          CHROMATIC_ARCHIVE_LOCATION: ./custom-test-results
