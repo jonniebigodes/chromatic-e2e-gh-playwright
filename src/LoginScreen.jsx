@@ -27,6 +27,7 @@ const LoginForm = ({ onSubmit, ...props }) => (
           name="email"
           type="email"
           autoComplete="email"
+          aria-label="email"
           required
           aria-required="true"
           className="login-form-input"
@@ -46,6 +47,7 @@ const LoginForm = ({ onSubmit, ...props }) => (
         type="password"
         id="password"
         required
+        aria-label="password"
         aria-required="true"
         className="login-form-input"
       />

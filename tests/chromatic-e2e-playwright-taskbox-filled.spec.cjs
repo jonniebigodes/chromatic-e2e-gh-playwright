@@ -69,6 +69,51 @@ test("Chromatic E2E Playwright - Successful Login with tasks", async ({
   await takeSnapshot(page, "Filled Tasks - Tasks Loaded", testInfo);
 });
 
+test.describe('Authentication', () => {
+  test.use({
+    disableAutoSnapshot: true,
+  })
+  test('Should be able to fill the form and focus the button using CSS focus', async ({
+    page,
+  }, testInfo) => {
+    await page.goto('/login')
+
+    await page.screenshot({
+      path: './test-results/InitialLoginPageFocusCSS.png',
+      fullPage: true,
+    })
+    await takeSnapshot(
+      page,
+      'Playwright - Login with CSS Focus state - Initial state of the login page',
+      testInfo
+    )
+
+    await page.locator('input[name="email"]').fill('test@email.com')
+    await page.locator('input[name="password"]').fill('KC@2N6^?vsV+)w1t')
+
+    /* 
+      Documentation to introduce the focus state for Chromatic
+        - https://playwright.dev/docs/api/class-locator#locator-focus
+        - https://playwright.dev/docs/actionability
+      */
+
+    // This example should go into the Docs
+    /* 
+      await page.getByRole('button', {name: 'Login to your account'}).focus()
+      await expect(page.getByRole('button')).toBeFocused() 
+    */
+
+    // testing purpose
+    await page.locator('button[type="submit"]').focus()
+    await page.screenshot({
+      path: './test-results/FilledFormFocusedButtonCSS.png',
+      fullPage: true,
+    })
+    await takeSnapshot(page, 'Playwright  - Login with CSS Focus state -  CSS Focus state - Button Focused', testInfo)
+
+    await expect(page.locator('button[type="submit"]')).toBeFocused()
+  })
+})
 /* test("Chromatic E2E Playwright - Successful Login with delete task", async ({
   page,
 }, testInfo) => {
