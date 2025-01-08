@@ -6,14 +6,14 @@ on: push
 jobs:
   Chromatic:
     name: "Run Chromatic VRT Tests"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22.12.0
       - name: Install dependencies
         run: npm ci
       - name: "Run Chromatic"
@@ -23,16 +23,16 @@ jobs:
   ####################################### Playwright wthout sharding #######################################
   Playwright:
     name: "Run Playwright"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     container:
-      image: mcr.microsoft.com/playwright:v1.44.1-jammy
+      image: mcr.microsoft.com/playwright:v1.49.0-noble
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22.12.0
       - name: Install dependencies
         run: npm ci
       - name: "Run Playwright tests"
@@ -43,9 +43,9 @@ jobs:
         if: always()
         with:
           name: test-results
-          #path: test-results/
-          path: ./custom-test-results
-          retention-days: 30
+          path: test-results/
+          #path: ./custom-test-results
+          retention-days: 1
   ##########################################################################################################
   ####################################### Playwright with sharding #######################################
   # Playwright:
@@ -80,21 +80,21 @@ jobs:
   Chromatic_E2E:
     name: "Run Chromatic E2E Tests"
     needs: Playwright
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22.12.0
       - name: Install dependencies
         run: npm ci
       - name: "Download Playwright artifacts"
         uses: actions/download-artifact@v4
         with:
           name: test-results
-          path: ./custom-test-results
+          path: test-results
           # pattern: playwright-report-*
           # merge-multiple: true
       - name: "Run Chromatic E2E"
@@ -102,5 +102,5 @@ jobs:
         with:
           projectToken: ${{ secrets.CHROMATIC_E2E_PROJECT_TOKEN }}
           playwright: true
-        env:
-          CHROMATIC_ARCHIVE_LOCATION: ./custom-test-results
+        #env:
+        #  CHROMATIC_ARCHIVE_LOCATION: ./custom-test-results
