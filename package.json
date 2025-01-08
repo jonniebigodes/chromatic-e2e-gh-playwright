@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@chromatic-com/playwright": "^0.6.7",
-    "@playwright/test": "^1.44.0",
+    "@playwright/test": "1.49",
     "@storybook/addon-a11y": "^7.6.19",
     "@storybook/addon-essentials": "^7.6.6",
     "@storybook/addon-interactions": "^7.6.6",
